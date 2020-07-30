@@ -1,6 +1,6 @@
 {
   "name": "router66",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple Routing for Your Scenic Web App Views",
   "main": "Router66.js",
   "scripts": {
