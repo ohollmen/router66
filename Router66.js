@@ -30,11 +30,11 @@ function Router66(opts) {
   this.routes = {};
   this.routesarr = [];
   // this.debug = 0;
-  debug && console.log("Router66 (v. "+Router666.VERSION+") instance:", this);
+  debug && console.log("Router66 (v. "+Router66.VERSION+") instance:", this);
 }
 
 Router66.parapatt = /(:(\w+))/g; // Parameter pattern
-Router66.pprepl = '([^\/]+)';
+Router66.pprepl = '([^\/]+)'; // Not used ??
 Router66.VERSION = "0.0.1";
 
 /** Add route path and handler to router routing table.
@@ -45,7 +45,7 @@ Router66.VERSION = "0.0.1";
 * 
 * @param path - Route path as RegExp string or fixed path
 * @param hdlr - Route handler callback
-* @param name - Displayable (short) name for route
+* @param name - Optional Displayable (short) name for route
 */
 Router66.prototype.add = function (path, hdlr, name) {
   var debug = this.debug;
