@@ -58,8 +58,9 @@ paths and handlers) are setup yet.
 
 Constructor options:
 
-- defpath - Default path for routing. This path is routed-to when routing is activated with router.start().
-- noactcopy - When 
+- **defpath** - Default path for routing. This path is routed-to when routing is activated with router.start().
+- **noactcopy** - When an array of action nodes with "extended/additional properties" is passed, set this to make sure
+  that properties beyond path and hdlr are included.
 
 ## router.add(path, hdlr) - Adding Routes
 
@@ -75,19 +76,19 @@ router.start() activates router to start reponding to hashchange events.
 You should consider what activating means and when to activate routing in the light of following questions:
 
 - Should I hide navigation before stating routing if there is some time consuming initialization activities done
-  for the app (loading data, initializing UI, computational activities)
+  for the app (loading data, initializing UI, computational activities) ?
 - Should I load some initial data into SPA runtime that app (and thus meaningful routing) depends on or just speeds up application
 by loading this (shared?) data later?
-- Before starting routing, should I put up a iconic symbol
+- Before starting routing, should I put up a iconic symbol or notify impatient, "eager-to-navigate" user some other way ?
 
 ## Action properties
 
 These properties appear as parameters of `router.add(path, hdlr)` method or are used as member names in
 in objects of action array in call form `router.add(array_of_actions)`.
 
-- path - URL path to route (e.g. "#/adm/remove")
-- hdlr - Event Handler callback for action (called at routing event)
-- name - Optional name for the action (3rd param, not directly used by router). May be useful for generating
+- **path** - URL path to route (e.g. "#/adm/remove")
+- **hdlr** - Event Handler callback for action (called at routing event)
+- **name** - Optional name for the action (3rd param, not directly used by router). May be useful for generating
   navigational HTML elements through which routing often happens (this would happen outside this routing toolkit).
 
 You can also use action nodes that have custom properties with names that do not overlap with router built-in
@@ -113,9 +114,10 @@ Not available via API at this time as router.route(ev) gets called by hashchange
 Use browser-native construct (e.g.) `location.hash = '#deals';` to trigger hashchange event.
 <!-- TODO: router.route_to("/path") with simulated (or modded) event. -->
 
-## Author
+## Author and License
 
 (C) Olli Hollmen 1998-2020
+License: MIT
 
 ## References
 
