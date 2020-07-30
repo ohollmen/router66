@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Router Demo</title>
+  <!--<meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1">-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0" />
+  <link type="text/css" rel="stylesheet" href="base.css"  />
+  <link type="text/css" rel="stylesheet" href="ext.css"  />
+  <style data-todo="Move to mypage.css">
+  body { margin: 0px; padding: 0; font-family: sans-serif; }
+  #header { padding: 5px 20px; margin: 0px;  color: #EEEEEE; background-color: #555555;  }
+  #header h1 { font-weight: bold; } /* for BS (that un-bolds ...) */
+  nav ul { background-color: #AAAAAA; border: 1px solid black; }
+  nav ul li { float: left; list-style-type: none; padding-left: 20px; }
+  #content { margin: 0px; padding: 20px; }
+  </style>
+<!--
+<link  href="node_modules/jsgrid/dist/jsgrid.min.css" type="text/css" rel="stylesheet"/>
+-->
+  <script src="Router66.js" type="text/javascript"></script>
+  <!-- <script src="custom.js" type="text/javascript"></script> -->
+
+
+  <script data-todo="Move to mypage.js">
+
+function foo(ev, act) {
+  console.log(act);
+  document.getElementById("content").innerHTML = "";
+  var el = document.getElementById("ctitle");
+  el.innerHTML = act.name;
+  if (act.name.match(/Dogs/)) {
+    var el_c = document.getElementById("content");
+    el_c.innerHTML = "<a href='#disclaim' title='Routing may happen via any links. Even dialog may be a route.'>Disclaimer</a>";
+  }
+  if (act.name.match(/Deals/)) {
+    var el_c = document.getElementById("content");
+    el_c.innerHTML = "<a href='#pets/dogs/42' title='Example of parametrized route. Even '>Deal of the Week</a>";
+  }
+}
+function showtable(ev, act) {
+  foo(ev, act);
+  var cont = "<table>"+ acts.map(function (it) {
+    return("<tr><td>"+it.path+"</td><td>"+it.name+"</td></tr>\n");
+  }).join('') + "</table>";
+  var el = document.getElementById("content");
+  el.innerHTML += cont;
+}
+function showpet(ev, act) {
+  var p = ev.params;
+  console.log("Params:"+JSON.stringify(p));
+  alert("Deal is on the "+ "Dog" +" in the cage "+ p.id);
+  // location.hash = '#'; // Not a valid route. Triggers default route.
+  location.hash = '#deals'; // TODO: Allow recalling history ?
+}
+
+function about(ev, act) {
+  var el = document.getElementById("ctitle");
+  el.innerHTML = act.name;
+  
+  var cont = document.getElementById("t1").innerHTML;
+  document.getElementById("content").innerHTML = cont;
+}
+var acts = [
+  {path: "pets/dogs/:id", name: "Dog Details", hdlr: showpet, extra: 1},
+  {path: "pets/dogs", name: "Dogs", hdlr: foo, extra: 2},
+  {path: "pets/cats", name: "Cats", hdlr: foo, extra: 3},
+  {path: "shop", name: "Shop", hdlr: foo, extra: 4},
+  {path: "deals", name: "Deals", hdlr: foo, extra: 5},
+  {path: "routes", name: "Web Store Routes", hdlr: showtable, extra: 6},
+  {path: "disclaim", name: "Disclaimer", hdlr: function (ev, act) { alert("Notice: Dogs may have fleas !"); location.hash = '#'; }, extra: 7},
+  {path: "about", name: "About Demo", hdlr: about, extra: 8},
+];
+function mypage_appinit() {
+  // Data-loading
+  // $.getJSON("", function (data) {  data; mypage_pageinit(); });
+  // axios.get("").then(function (hres) { hres.data; mypage_pageinit(); });
+  // UI Bootstrap
+  function mypage_pageinit() {
+    // $('#content').html(gen_or_templated_content);
+    // 
+    // $('#content .some').click(function (ev) {});
+  }
+  var router = new Router66({defpath: "pets/dogs", debug: 1, noactcopy: 1});
+  router.add(acts); // Add all in one shot
+  // TODO: Emulate a small wait period (mimicking data loading for app)
+  // and call router.start() in callback
+  console.log("ROUTER:",router);
+  router.start(); // Start routing
+  console.log(router.generate('handlers', acts));
+  console.log(router.generate('menu', acts));
+}
+// $(document).ready(mypage_appinit);
+// window.addEventListener(\"load\", mypage_appinit);
+window.onload = mypage_appinit;
+  </script>
+</head>
+<body >
+
+<!-- BS: <h1><i id="nnn" class="glyphicon glyphicon-check" ></i>
+  <span style="font-weight: bold;">Router Demo</span></h1> -->
+<div id="header" ><h1><span>Router Demo</span></h1></div>
+
+<nav>
+<ul id="menu">
+<li><a href="#pets/dogs">Dogs</a></li>
+<li><a href="#pets/cats">Cats</a></li>
+<li><a href="#shop">Shop</a></li>
+<li><a href="#deals">Deals</a></li>
+<li><a href="#routes">Routes Mapping</a></li>
+<li><a href="#about">About Demo</a></li>
+<li><a href="#badroute">Bad route</a></li>
+
+</ul>
+</nav>
+
+<h1 id="ctitle" style="padding-left: 20px;"></h1>
+<div id="content">
+
+
+
+</div><!-- content -->
+
+<script type="text/x-template" id="t1">
+<p>This router demo acts as a small testbench or router and exercises routes with static and parametrized paths.
+Follow Browser console for more info on routing events, etc.</p>
+<div id="t1_cont"></div>
+</script>
+<script type="text/x-template" id="t2">
+<div id="t2_cont"></div>
+</script>
+<script type="text/x-template" id="t3">
+<div id="t3_cont"></div>
+</script>
+
+
+</body>
+</html>
