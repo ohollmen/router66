@@ -4,7 +4,9 @@
   "description": "Simple Routing for Your Scenic Web App Views",
   "main": "Router66.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jsdoc": "jsdoc *.js -R README.md -c jsdoc.conf.json",
+    "jshint":""
   },
   "devDependencies": {
     "jsdoc":"3.5.5",
