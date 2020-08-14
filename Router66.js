@@ -22,7 +22,7 @@ function Router66(opts) {
   var defopts = {pathattr: "path", hdlrattr: "hdlr", nameattr: "name", defpath: "/", "debug": 0};
   opts = opts || defopts;
   var debug = opts.debug || 0;
-  var coreprops = ["pathattr","hdlrattr", "nameattr", "defpath", "noactcopy"];
+  var coreprops = ["pathattr","hdlrattr", "nameattr", "defpath", "noactcopy", "pre"];
   coreprops.forEach(function (p) { if (!opts[p]) { opts[p] = defopts[p]; } });
   
   debug && console.log("Options after merge w. defaults: "+JSON.stringify(opts));
@@ -148,7 +148,9 @@ Router66.prototype.route =  function (ev) { // ev
     // AND 
     if (act.pnames) { params = this.mkparams(act, marr); }
     ev.params = params;
+    if (this.pre && (typeof this.pre == 'function')) { this.pre(ev, act); }
     hdlr(ev, act);
+    // if (this.post) { this.post(ev, act); } ?
     return; // false
   }
   // No matching path or no handler present
@@ -156,7 +158,7 @@ Router66.prototype.route =  function (ev) { // ev
   // TODO: (Based on config ?) Allow default route or routing error handler to take over.
   //if (this.errhdlr) { this.errhdlr(ev, act); }
   // if (this.errusedefault) { location.hash = '#' + this.defpath; }
-}
+};
 /** Make routing url derived parameters combining the parameter names from actions
 * and values extracted from URL.
 */
@@ -199,9 +201,9 @@ Router66.prototype.generate = function (what, acts, opts) {
       function replacer(path) { return path.replace(/\W/g, "_"); }
       acts.forEach(function (it) {
         // Parse something or check actid
-	var id = (typeof it.hdlr == 'string') ? it.hdlr : replacer(it.path);
+        var id = (typeof it.hdlr == 'string') ? it.hdlr : replacer(it.path);
         cont += "function hdl_"+id+"(ev, act) {\n\n}\n";
-	
+
       });
       return cont;
     },
