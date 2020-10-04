@@ -61,15 +61,17 @@ function about(ev, act) {
   var cont = document.getElementById("t1").innerHTML;
   document.getElementById("content").innerHTML = cont;
 }
+
+function disclaimer (ev, act) { alert("Notice: Dogs may have fleas !"); location.hash = '#'; }
 var acts = [
   {path: "pets/dogs/:id", name: "Dog Details", hdlr: showpet, extra: 1},
-  {path: "pets/dogs", name: "Dogs", hdlr: foo, extra: 2},
-  {path: "pets/cats", name: "Cats", hdlr: foo, extra: 3},
-  {path: "shop", name: "Shop", hdlr: foo, extra: 4},
-  {path: "deals", name: "Deals", hdlr: foo, extra: 5},
-  {path: "routes", name: "Web Store Routes", hdlr: showtable, extra: 6},
-  {path: "disclaim", name: "Disclaimer", hdlr: function (ev, act) { alert("Notice: Dogs may have fleas !"); location.hash = '#'; }, extra: 7},
-  {path: "about", name: "About Demo", hdlr: about, extra: 8},
+  {path: "pets/dogs",     name: "Dogs", hdlr: foo, extra: 2},
+  {path: "pets/cats",     name: "Cats", hdlr: foo, extra: 3},
+  {path: "shop",          name: "Shop", hdlr: foo, extra: 4},
+  {path: "deals",         name: "Deals", hdlr: foo, extra: 5},
+  {path: "routes",        name: "Web Store Routes", hdlr: showtable, extra: 6},
+  {path: "disclaim",      name: "Disclaimer", hdlr: disclaimer, extra: 7},
+  {path: "about",         name: "About Demo", hdlr: about, extra: 8},
 ];
 function mypage_appinit() {
   // Data-loading
@@ -81,7 +83,13 @@ function mypage_appinit() {
     // 
     // $('#content .some').click(function (ev) {});
   }
-  var router = new Router66({defpath: "pets/dogs", debug: 1, noactcopy: 1});
+  function preroute(ev, act) {
+    
+    console.log("PRE: "+ act.name + " ("+location.hash+")");
+    console.log("PRE: ev.routepath: "+ev.routepath);
+    //alert("PRE !")
+  }
+  var router = new Router66({defpathX: "pets/dogs", debug: 1, noactcopy: 1, pre: preroute});
   router.add(acts); // Add all in one shot
   // TODO: Emulate a small wait period (mimicking data loading for app)
   // and call router.start() in callback
@@ -116,9 +124,7 @@ window.onload = mypage_appinit;
 
 <h1 id="ctitle" style="padding-left: 20px;"></h1>
 <div id="content">
-
-
-
+Welcome to Router66 !
 </div><!-- content -->
 
 <script type="text/x-template" id="t1">
