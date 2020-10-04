@@ -58,10 +58,24 @@ paths and handlers) are setup yet.
 
 Constructor options:
 
-- **defpath** - Default path for routing. This path is routed-to when routing is activated with router.start().
+- **defpath** - Default path for routing (Optional, no default value).
+  This path is routed-to when routing is activated with router.start(). If value for this exists it should be to valid name of
+  one of the route actions ("name" property).
 - **noactcopy** - When an array of action nodes with "extended/additional properties" is passed, set this to make sure
   that properties beyond path and hdlr are included.
+- **debug** - produce more verbose output (to console) during routing ops.
+- **pre** - Pre-handler for each route transition. Called just before "hdlr". This handler is meant do preparation relevant
+   for all handlers. Parameters passed to this handler are the same as
+   
+Example of implementing and setting a small prehandler:
+```
+function preroute(ev, act) {
+  console.log("Routing to "+act.name);
+  // ...
+}
+var router = new Router66({..., pre: preroute});
 
+```
 ## router.add(path, hdlr) - Adding Routes
 
 Two or more routes should be added by add method. add() method is overloaded to accept:
@@ -113,6 +127,12 @@ where the parameters are:
 Not available via API at this time as router.route(ev) gets called by hashchange events.
 Use browser-native construct (e.g.) `location.hash = '#deals';` to trigger hashchange event.
 <!-- TODO: router.route_to("/path") with simulated (or modded) event. -->
+
+## Changes
+
+- 1.0.3 -  Eliminate routing default path ('defpath') as mandatory and have no default value for it (used to be "/").
+    Many apps could be fine with the state page was left on at page creation, before routing started. When 'defpath' is not set the
+    router start() method does not perform any route change either.
 
 ## Author and License
 
