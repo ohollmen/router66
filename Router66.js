@@ -15,11 +15,12 @@ Scenic SPA web router
 Options in opts:
 - **defpath** - default route path to route to when application starts. Should be exactly one of paths added later (by add() method).
 - **debug** - Produce verbose output in console (for development and learning purposes)
+- **pre** - Set pre-routing handler that gets called for every route change (just before routing handler).
 @todo Add possibility to resolve handlers from a "namespace object" with string names mapped to functions (possibly several or dot.notation ?).
 */
 function Router66(opts) {
-  
-  var defopts = {pathattr: "path", hdlrattr: "hdlr", nameattr: "name", defpath: "/", "debug": 0};
+  // OLD: defpath: "/"
+  var defopts = {pathattr: "path", hdlrattr: "hdlr", nameattr: "name", defpath: "", "debug": 0};
   opts = opts || defopts;
   var debug = opts.debug || 0;
   var coreprops = ["pathattr","hdlrattr", "nameattr", "defpath", "noactcopy", "pre"];
@@ -117,8 +118,9 @@ Router66.prototype.route =  function (ev) { // ev
   //console.error("Route ev:", ev);
   var path = (location.hash || '#').substr(1);
   var def = 0;
-  if (!path) { path = this.defpath; def = 1; }
+  if (!path && this.defpath) { path = this.defpath; def = 1; }
   this.debug && console.log("route: Execute routing for '"+path+"' (def:"+def+")");
+  if (!path) { console.log("route: WARNING: No route path found in URL and no 'defpath' set !!"); return; }
   //var act = acts.filter(function (act) {
   //  return act.path == path;
   //})[0];
@@ -134,9 +136,9 @@ Router66.prototype.route =  function (ev) { // ev
   //  //if (path === rpath) { hdlr = routes[rpath]; break; } // Literal comp
   //  if (path.match(re)) { hdlr = routes[rpath]; break; }
   //}
-  var act;
+  var act; // Resolved action
   var marr;
-  // 
+  // Find route action.
   for (var i =0; i < routesarr.length; i++) {
     act = routesarr[i];
     //(debug > 1) && console.log("route: Try match: " + act.pathre);
@@ -147,7 +149,11 @@ Router66.prototype.route =  function (ev) { // ev
     var params;
     // AND 
     if (act.pnames) { params = this.mkparams(act, marr); }
+    // Only inject select "proprietary" properties to original event.
+    // TODO: Consider detecting jquery wrapper event and nested "original" event (and acting based on that info):
+    // forward original event (based on config ?) ? mark as JQ event ?
     ev.params = params;
+    ev.routepath = location.hash;
     if (this.pre && (typeof this.pre == 'function')) { this.pre(ev, act); }
     hdlr(ev, act);
     // if (this.post) { this.post(ev, act); } ?
@@ -175,12 +181,16 @@ Router66.prototype.mkparams = function (act, marr) {
 Router66.prototype.start = function () {
   // Check / Validate default path
   location.hash = '#'; // Safe to change / set, no listener yet
+  var act;
+  if (this.defpath) {
+    // var err = ""; // Base Error message
+    act = this.routes[this.defpath];
+    if (!act) { throw "start: Could not lookup action for default route path ('"+this.defpath+"')! Routing NOT started "; }
+    var hdlr = act.hdlr;
+    if (!hdlr) { throw "start: Default Route Not Properly Configured ('" + this.defpath + "')"; }
+  }
   
-  var act = this.routes[this.defpath];
-  if (!act) { throw "start: Could not lookup action for default route path ("+this.defpath+")!"; }
-  var hdlr = act.hdlr;
-  if (!hdlr) { throw "start: Default Route Not Properly Configured (" + this.defpath + ")"; }
-  var self = this; // For onchange
+  var self = this; // For onchange reference
   // 
   var onchange = function (ev) {
     // if (self.pre) { self.pre(); } // In route() ?
@@ -189,8 +199,9 @@ Router66.prototype.start = function () {
   }; // return false ?
   window.addEventListener("hashchange", onchange, false);
   // Change to default ?
-  this.debug && console.log("start: Set default path/route: "+this.defpath);
-  location.hash = this.defpath; // Auto-dispatches (as ev. listener is set)
+  this.debug && act && console.log("start: Set default path/route: "+this.defpath);
+  // Now Only transition route if default is set !
+  if (act) { location.hash = this.defpath; } // Auto-dispatches (as ev. listener is set)
   this.debug && console.log("start: START Routing (by UI events) !!!");
 };
 /** */
