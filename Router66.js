@@ -9,6 +9,7 @@ Scenic SPA web router
 
 
 */
+var location;
 
 /** Create new router.
 
@@ -208,7 +209,7 @@ Router66.prototype.start = function () {
 Router66.prototype.generate = function (what, acts, opts) {
   var what_opts = {
     "handlers": function () {
-      cont = "/* JS route Handlers */\n";
+      var cont = "/* JS route Handlers */\n";
       function replacer(path) { return path.replace(/\W/g, "_"); }
       acts.forEach(function (it) {
         // Parse something or check actid
@@ -225,7 +226,9 @@ Router66.prototype.generate = function (what, acts, opts) {
         //if (it.path.match(/:\w+/)) { return; }
         cont += "<ul><a href=\"#"+it.path+"\">"+it.name+"</a></ul>\n";
       });
-      cont += "</ul>"; return cont; }
+      cont += "</ul>";
+      return cont;
+    }
   };
   var gencb = what_opts[what];
   if (gencb) { return gencb(); }

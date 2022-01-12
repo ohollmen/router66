@@ -1,16 +1,21 @@
 {
   "name": "router66",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Simple Routing for Your Scenic Web App Views",
   "main": "Router66.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jsdoc": "jsdoc *.js -R README.md -c jsdoc.conf.json",
-    "jshint":"jshint"
+    "jshint":"jshint -c .jshintrc Router66.js lib/rapp.js",
+    "publish": "npm publish # Opt: npm login"
   },
   "devDependencies": {
     "jsdoc":"3.5.5",
     "jshint": "2.9.7"
+  },
+  "optionalDependencies": {
+    "axios":"*",
+    "jquery":"*"
   },
   "keywords": [
     "router",
@@ -18,5 +23,6 @@
     "framework"
   ],
   "author": "Olli Hollmen",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": "github:ohollmen/router66"
 }
