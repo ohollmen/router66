@@ -5,21 +5,77 @@
   <!--<meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1">-->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0" />
-  <link type="text/css" rel="stylesheet" href="base.css"  />
-  <link type="text/css" rel="stylesheet" href="ext.css"  />
   <style data-todo="Move to mypage.css">
-  body { margin: 0px; padding: 0; font-family: sans-serif; }
+  body { font-family: sans-serif; }
+  body { margin: 0px; padding: 0px;  }
   #header { padding: 5px 20px; margin: 0px;  color: #EEEEEE; background-color: #555555;  }
-  #header h1 { font-weight: bold; } /* for BS (that un-bolds ...) */
-  nav ul { background-color: #AAAAAA; border: 1px solid black; }
-  nav ul li { float: left; list-style-type: none; padding-left: 20px; }
+  #header h1 { font-weight: bold; margin: 0px; padding: 10px; } /* for BS (that un-bolds ...) */
+  
+  /*  border: 0px; (Test container(s), ul, li with 3x colors (#FF0000 #00FF00 #0000FF) */
+  /* Xfloat: left; Xwidth: 100%; Xpadding: 0px; Xmargin: 0px;
+    Xbackground-color: #00FF00; */
+  nav {  }
+  /* border: 1px solid black; ul will not show through */
+  nav ul {
+    padding: 0px; margin: 0px;
+    list-style-type: none;
+    float: left; width: 100%;
+    background-color: #eeeeee;
+  }
+  nav ul li { padding-right: 0px; float: left; background-color: #eeeeee; }
+  nav a { padding: 0px 10px 0px; text-decoration: none; background-color: #eeeeee;  }
+  nav a:hover { padding: 0px 10px 0px; color: white; background-color: #909090; }
+  .active { background-color: #000000; color: #BBBBBB; }
+  /* Content area */
   #content { margin: 0px; padding: 20px; }
+  /* Sidepane */
+  
+  #sidepanecont { padding-left: 250px; }
   </style>
 <!--
 <link  href="node_modules/jsgrid/dist/jsgrid.min.css" type="text/css" rel="stylesheet"/>
 -->
+  <!-- <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script> -->
   <script src="Router66.js" type="text/javascript"></script>
   <!-- <script src="custom.js" type="text/javascript"></script> -->
+
+
+
+</head>
+<!-- BS: <h1><i id="nnn" class="glyphicon glyphicon-check" ></i>
+  <span style="font-weight: bold;">Router Demo</span></h1> -->
+<body >
+<div id="header" ><h1><span>Router Demo</span></h1></div>
+
+<nav >
+<ul id="menu">
+<li><a href="#pets/dogs">Dogs</a></li>
+<li><a href="#pets/cats">Cats</a></li>
+<li><a href="#shop">Shop</a></li>
+<li><a href="#deals">Deals</a></li>
+<li><a href="#routes">Routes Mapping</a></li>
+<li><a href="#about">About Demo</a></li>
+<li><a href="#badroute">Bad route</a></li>
+</ul>
+</nav>
+<br>
+
+<h1 id="ctitle" style="padding-left: 20px;"></h1>
+<div id="content">
+Welcome to Router66 !
+</div><!-- content -->
+
+<script type="text/x-template" id="t1">
+<p>This router demo acts as a small testbench or router and exercises routes with static and parametrized paths.
+Follow Browser console for more info on routing events, etc.</p>
+<div id="t1_cont"></div>
+</script>
+<script type="text/x-template" id="t2">
+<div id="t2_cont"></div>
+</script>
+<script type="text/x-template" id="t3">
+<div id="t3_cont"></div>
+</script>
 
 
   <script data-todo="Move to mypage.js">
@@ -74,16 +130,32 @@ var acts = [
   {path: "about",         name: "About Demo", hdlr: about, extra: 8},
 ];
 function mypage_appinit() {
+  //$("nav ul").click(function () { alert(this); return true; });
   // Data-loading
   // $.getJSON("", function (data) {  data; mypage_pageinit(); });
   // axios.get("").then(function (hres) { hres.data; mypage_pageinit(); });
   // UI Bootstrap
   function mypage_pageinit() {
+    
     // $('#content').html(gen_or_templated_content);
     // 
     // $('#content .some').click(function (ev) {});
   }
   function preroute(ev, act) {
+    var navsel = "nav a";
+    var nels = document.querySelectorAll(navsel);
+    console.log("NELS: "+nels);
+    for (var i = 0; i < nels.length; i++) {
+      nels[i].classList.remove("active");
+    }
+    //$(navsel).removeClass("active");
+    var actsel = "nav [href='"+"#"+act.path+"']";
+    //console.log("Sel: "+sel);
+    //var el = $(actsel).get(0);
+    var actel = document.querySelector(actsel);
+    console.log("EL: "+actel);
+    if (actel) { actel.classList.add("active"); }
+    //$(actsel).addClass("active");
     
     console.log("PRE: "+ act.name + " ("+location.hash+")");
     console.log("PRE: ev.routepath: "+ev.routepath);
@@ -102,43 +174,7 @@ function mypage_appinit() {
 // window.addEventListener(\"load\", mypage_appinit);
 window.onload = mypage_appinit;
   </script>
-</head>
-<body >
-
-<!-- BS: <h1><i id="nnn" class="glyphicon glyphicon-check" ></i>
-  <span style="font-weight: bold;">Router Demo</span></h1> -->
-<div id="header" ><h1><span>Router Demo</span></h1></div>
-
-<nav>
-<ul id="menu">
-<li><a href="#pets/dogs">Dogs</a></li>
-<li><a href="#pets/cats">Cats</a></li>
-<li><a href="#shop">Shop</a></li>
-<li><a href="#deals">Deals</a></li>
-<li><a href="#routes">Routes Mapping</a></li>
-<li><a href="#about">About Demo</a></li>
-<li><a href="#badroute">Bad route</a></li>
-
-</ul>
-</nav>
-
-<h1 id="ctitle" style="padding-left: 20px;"></h1>
-<div id="content">
-Welcome to Router66 !
-</div><!-- content -->
-
-<script type="text/x-template" id="t1">
-<p>This router demo acts as a small testbench or router and exercises routes with static and parametrized paths.
-Follow Browser console for more info on routing events, etc.</p>
-<div id="t1_cont"></div>
-</script>
-<script type="text/x-template" id="t2">
-<div id="t2_cont"></div>
-</script>
-<script type="text/x-template" id="t3">
-<div id="t3_cont"></div>
-</script>
-
+<!-- Set of view (non-parametrized/non-templated) hard-templates ? -->
 
 </body>
 </html>

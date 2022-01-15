@@ -6,16 +6,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jsdoc": "jsdoc *.js -R README.md -c jsdoc.conf.json",
-    "jshint":"jshint -c .jshintrc Router66.js lib/rapp.js",
-    "publish": "npm publish # Opt: npm login"
+    "jshint": "jshint -c .jshintrc Router66.js lib/rapp.js",
+    "__publish": "npm publish # Opt: npm login"
   },
   "devDependencies": {
-    "jsdoc":"3.5.5",
+    "jsdoc": "3.5.5",
     "jshint": "2.9.7"
   },
   "optionalDependencies": {
-    "axios":"*",
-    "jquery":"*"
+    "axios": "*",
+    "jquery": "^3.5.1"
   },
   "keywords": [
     "router",
